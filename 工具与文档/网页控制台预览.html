@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>锁屏·屏幕·睡眠 全套设置</title>
+<style>
+:root{
+  --bg:#f1f5f9; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --border:#e2e8f0;
+  --btn:#f1f5f9; --btn-h:#e2e8f0; --accent:#f59e0b; --accent-soft:#fef3c7; --accent-text:#78350f;
+  --ok:#16a34a; --danger:#dc2626; --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.05);
+}
+[data-theme="dark"]{
+  --bg:#0f172a; --card:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --border:#334155;
+  --btn:#334155; --btn-h:#475569; --accent:#fbbf24; --accent-soft:#78350f; --accent-text:#fde68a;
+  --shadow:0 1px 3px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:22px 16px 40px;transition:background .2s,color .2s}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.ttl{display:flex;gap:12px;align-items:flex-start}
+.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#fbbf24);display:inline-flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+h1{font-size:20px;font-weight:700;line-height:1.3}
+.sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.6;max-width:52em}
+.tools{display:flex;gap:6px;flex:none}
+button{font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--btn);color:var(--text);border-radius:9px;transition:.15s;font-size:13px}
+button:hover{background:var(--btn-h)}
+.icon{width:34px;height:34px;font-size:15px;display:inline-flex;align-items:center;justify-content:center}
+.icon.danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 13px;font-size:12px;color:var(--muted);box-shadow:var(--shadow)}
+.chip b{color:var(--text);font-weight:600}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card .hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+.card .ds{color:var(--muted);font-size:12px;line-height:1.6;margin:6px 0 12px}
+.mode{border:1px solid var(--border);border-radius:11px;padding:11px;margin-bottom:8px;background:transparent}
+.mode:last-of-type{margin-bottom:0}
+.mhd{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;margin-bottom:9px}
+.mhd .lb{color:var(--muted)}
+.mhd .cur{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.btns button{padding:6px 11px;border-radius:8px}
+.btns button.on{background:var(--accent);border-color:var(--accent);color:#1f2937;font-weight:700}
+.btns button.never{color:var(--accent);font-weight:600;border-color:var(--accent)}
+.cst{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+.cst input{width:96px;padding:6px 9px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:13px}
+.cst input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.cst button{padding:6px 11px;border-radius:8px}
+.cst .hint{color:var(--muted);font-size:11.5px}
+.cst select{padding:6px 9px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:13px;max-width:230px}
+.cst select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.saver{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.warnbox{margin-top:10px;font-size:12px;color:var(--muted);background:var(--btn);border-radius:8px;padding:8px 11px;line-height:1.6}
+.dl-stats{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.dl-row{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--muted)}
+.dl-dot.ok{background:#16a34a}
+.dl-dot.bad{background:#dc2626}
+.dl-row .dl-val{margin-left:auto;font-weight:600}
+.dl-val.ok{color:#16a34a}
+.dl-val.bad{color:#dc2626}
+.foot{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+.big{flex:1;min-width:210px;padding:14px;border-radius:12px;font-size:14.5px;font-weight:700;border:none;color:#fff}
+.big.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.big.warn{background:linear-gradient(135deg,#64748b,#475569)}
+.big.ghost{background:transparent;border:1px solid var(--border);color:var(--text);font-weight:600}
+.big.ghost:hover{background:var(--btn-h)}
+.big:hover{filter:brightness(1.07)}
+.tip{color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.7}
+.loading{color:var(--muted);font-size:13px;padding:30px;text-align:center}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-14px);background:#16a34a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:99;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:#dc2626}
+@media (max-width:520px){ .cst input{width:78px} h1{font-size:18px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="ttl"><span class="logo">🔒</span>
+      <div><h1>锁屏·屏幕·睡眠 全套设置</h1>
+      <p class="sub">全部项目都可设为「永不」，彻底取消自动黑屏 / 锁屏 / 睡眠。「接通电源」与「使用电池」是两套独立的值。</p></div>
+    </div>
+    <div class="tools">
+      <button class="icon" id="btn-theme" title="切换主题">🌓</button>
+      <button class="icon" id="btn-refresh" title="重新读取">⟳</button>
+      <button class="icon danger" id="btn-quit" title="退出后台程序">⏻</button>
+    </div>
+  </header>
+  <div class="bar" id="bar">
+    <span class="chip">⚙️ <b id="scheme">读取中…</b></span>
+    <span class="chip">🌐 端口 <b>18890</b></span>
+    <span class="chip" id="chip-hib">💤 休眠</span>
+  </div>
+  <div id="app"><div class="loading">正在读取当前系统设置…</div></div>
+  <div class="card" id="card-browser">
+    <div class="hd"><span>🌐 打开页面用的浏览器</span></div>
+    <div class="ds">默认用系统默认浏览器。改完之后，下次启动程序就会用你选的浏览器打开设置页面。</div>
+    <div class="cst">
+      <select id="sel-browser"></select>
+      <button id="btn-save-browser">保存</button>
+      <span class="hint" id="browser-cur">读取中…</span>
+    </div>
+  </div>
+  <div class="foot">
+    <button class="big ok" id="btn-never">🔓 一键全部设为「永不」</button>
+    <button class="big warn" id="btn-defaults">↩ 恢复系统默认</button>
+  </div>
+  <div class="foot">
+    <button class="big ghost" id="btn-export">📤 导出配置（存成 JSON）</button>
+    <button class="big ghost" id="btn-import">📥 导入配置（从 JSON 还原）</button>
+  </div>
+  <input type="file" id="file-import" accept=".json,application/json" style="display:none">
+  <p class="tip">设置会立即写入当前电源计划并生效。屏保为当前用户注册表项，修改后已广播通知系统。<br>
+  导出 / 导入配置不需要管理员权限，适合换电脑或重装系统后恢复。</p>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var PRESETS=[[0,'永不'],[60,'1分'],[180,'3分'],[300,'5分'],[600,'10分'],[900,'15分'],[1800,'30分'],[3600,'1小时'],[7200,'2小时']];
+var SAVER_PRESETS=[[60,'1分'],[300,'5分'],[600,'10分'],[900,'15分'],[1800,'30分'],[3600,'1小时']];
+var S=null;
+var DL=null;
+function $(id){return document.getElementById(id)}
+var tt;
+function show(m,err){var t=$('toast');t.textContent=m;t.className='toast show'+(err?' err':'');clearTimeout(tt);tt=setTimeout(function(){t.className='toast'+(err?' err':'')},2400)}
+function api(path,data){
+  return fetch(path,{method:data?'POST':'GET',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined})
+    .then(function(r){return r.json()})
+    .then(function(j){ if(j&&j.ok===false&&j.error) show('操作失败：'+j.error,true); return j; });
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function modeRow(k,it,mode,label,val){
+  var on=val===0?' never':'';
+  var h='<div class="mode"><div class="mhd"><span class="lb">'+label+'</span>'+
+    '<span class="cur" id="cur-'+k+'-'+mode+'">'+esc(it[mode+'Text'])+'</span></div><div class="btns" id="btns-'+k+'-'+mode+'">';
+  for(var i=0;i<PRESETS.length;i++){
+    var p=PRESETS[i];
+    h+='<button class="'+(p[0]===val?'on':'')+(p[0]===0?' never':'')+'" data-act="preset" data-k="'+k+'" data-m="'+mode+'" data-sec="'+p[0]+'">'+p[1]+'</button>';
+  }
+  h+='</div><div class="cst"><input type="number" min="0" step="1" id="inp-'+k+'-'+mode+'" placeholder="自定义/分钟">'+
+    '<button data-act="custom" data-k="'+k+'" data-m="'+mode+'">应用</button>'+
+    '<button data-act="sync" data-k="'+k+'" data-m="'+mode+'" title="把这个值同时用到另一项">↕ 同步两项</button>'+
+    '<span class="hint">填 0 = 永不</span></div></div>';
+  return h;
+}
+function cardHtml(k,it){
+  var h='<div class="card"><div class="hd"><span>'+it.icon+' '+esc(it.name)+'</span></div><div class="ds">'+esc(it.desc)+'</div>';
+  h+=modeRow(k,it,'ac','🔌 接通电源',it.ac);
+  if(S.hasBattery) h+=modeRow(k,it,'dc','🔋 使用电池',it.dc);
+  if(k==='hibernate'&&!S.hibernateAvailable) h+='<div class="warnbox">⚠️ 本机未开启休眠功能（未找到 hiberfil.sys），此项设置不会生效。如需使用，请以管理员身份运行 <b>powercfg /h on</b> 开启休眠。</div>';
+  return h+'</div>';
+}
+function saverHtml(sv){
+  var h='<div class="card"><div class="hd"><span>🖼️ 屏幕保护程序</span></div>'+
+    '<div class="ds">屏保恢复时若勾选「显示登录屏幕」也会导致锁屏，不需要就直接关掉。</div>'+
+    '<div class="saver"><button class="'+(sv.active?'':'on')+'" data-act="saver" data-on="0">关闭</button>'+
+    '<button class="'+(sv.active?'on':'')+'" data-act="saver" data-on="1">开启</button>'+
+    '<span class="hint" style="color:var(--muted);font-size:12px;margin-left:6px">当前：'+(sv.active?esc(sv.timeout)+' 秒后启动':'已关闭')+'</span></div>';
+  if(sv.active){
+    h+='<div class="btns" style="margin-top:10px">';
+    for(var i=0;i<SAVER_PRESETS.length;i++){var p=SAVER_PRESETS[i];
+      h+='<button class="'+(p[0]===sv.timeout?'on':'')+'" data-act="saverTime" data-sec="'+p[0]+'">'+p[1]+'</button>';}
+    h+='</div>';
+  }
+  h+='<div class="warnbox">屏保开关写在当前用户注册表，改完已通知系统刷新；个别情况下需注销后完全生效。</div>';
+  return h+'</div>';
+}
+function statRow(label,ok,okText,badText){
+  return '<div class="dl-row"><span class="dl-dot '+(ok?'ok':'bad')+'"></span><span>'+esc(label)+'</span><span class="dl-val '+(ok?'ok':'bad')+'">'+esc(ok?okText:badText)+'</span></div>';
+}
+function dynlockHtml(dl){
+  if(!dl){ return '<div class="card"><div class="hd"><span>📱 动态锁（离开自动锁屏）</span></div><div class="ds">正在检测…</div></div>'; }
+  var h='<div class="card"><div class="hd"><span>📱 动态锁（离开自动锁屏）</span></div>'+
+    '<div class="ds">利用已配对的手机蓝牙信号：你带着手机离开电脑后自动锁屏。前提是蓝牙已配对手机，并在系统设置里勾选该手机为信任设备。</div>'+
+    '<div class="saver"><button class="'+(dl.enabled?'on':'')+'" data-act="dynlock" data-on="0">关闭</button>'+
+    '<button class="'+(dl.enabled?'on':'')+'" data-act="dynlock" data-on="1">开启</button>'+
+    '<span class="hint" style="color:var(--muted);font-size:12px;margin-left:6px">当前：'+(dl.enabled?'已开启':'已关闭')+'</span></div>';
+  var rs='';
+  rs+=statRow('动态锁开关', dl.enabled, '已开启', '已关闭');
+  rs+=statRow('信任设备', dl.deviceSelected, '已选中手机', '未选中');
+  rs+=statRow('手机配对', dl.pairedCount>0, '已配对 '+dl.pairedCount+' 台', '未配对');
+  rs+=statRow('蓝牙密钥权限', dl.keysHealthy==='healthy', '正常', (dl.keysHealthy==='unknown'?'无法检测':'异常'));
+  h+='<div class="dl-stats">'+rs+'</div>';
+  h+='<div class="btns" style="margin-top:12px">'+
+    '<button data-act="dynlock-open" data-target="bluetooth">🔗 打开蓝牙设置</button>'+
+    '<button data-act="dynlock-open" data-target="dynamiclock">🔗 打开动态锁设置</button></div>';
+  if(dl.pairedCount===0) h+='<div class="warnbox">⚠️ 未检测到已配对的手机。请点「打开蓝牙设置」先配对手机，再回来勾选信任设备。</div>';
+  else if(!dl.deviceSelected) h+='<div class="warnbox">⚠️ 手机已配对，但还没勾选信任设备。请点「打开动态锁设置」勾选你的手机。</div>';
+  if(dl.keysHealthy==='broken') h+='<div class="warnbox">⚠️ 蓝牙密钥权限异常（可能被某些清理软件删掉），会导致动态锁失效。</div>';
+  return h+'</div>';
+}
+function render(st){
+  S=st;
+  $('scheme').textContent=st.scheme.name;
+  var ch=$('chip-hib');
+  ch.innerHTML=(st.hibernateAvailable?'💤 休眠已开启':'💤 休眠未开启');
+  ch.style.opacity=st.hibernateAvailable?'1':'.75';
+  var h='';
+  var ks=['lock','display','sleep','hibernate'];
+  for(var i=0;i<ks.length;i++) h+=cardHtml(ks[i],st.items[ks[i]]);
+  h+=saverHtml(st.saver);
+  h+='<div id="card-dynlock">'+dynlockHtml(DL)+'</div>';
+  $('app').innerHTML=h;
+}
+function refresh(){ return fetch('/api/state').then(function(r){return r.json()}).then(render); }
+function refreshDynlock(){ return fetch('/api/dynlock').then(function(r){return r.json()}).then(function(dl){ DL=dl; var el=$('card-dynlock'); if(el) el.innerHTML=dynlockHtml(dl); }).catch(function(){}); }
+function updateRow(k,mode,sec,text){
+  var cur=$('cur-'+k+'-'+mode); if(cur) cur.textContent=text;
+  var box=$('btns-'+k+'-'+mode); if(!box) return;
+  var bs=box.getElementsByTagName('button');
+  for(var i=0;i<bs.length;i++){ var v=parseInt(bs[i].getAttribute('data-sec'),10);
+    bs[i].className=(v===sec?'on':'')+(v===0?' never':''); }
+  if(S&&S.items[k]){ S.items[k][mode]=sec; S.items[k][mode+'Text']=text; }
+}
+function setVal(k,mode,sec){
+  return api('/api/set',{key:k,sec:sec,mode:mode}).then(function(j){
+    if(!j||j.error) return;
+    if(j.ac!=null) updateRow(k,'ac',j.ac,j.acText);
+    if(j.dc!=null&&S.hasBattery) updateRow(k,'dc',j.dc,j.dcText);
+    show('✅ '+j.name+'（'+(mode==='ac'?'接通电源':mode==='dc'?'使用电池':'两项')+'）已设为 '+j.text);
+  });
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest?e.target.closest('button'):null; if(!b) return;
+  var act=b.getAttribute('data-act'); if(!act) return;
+  var k=b.getAttribute('data-k'), m=b.getAttribute('data-m');
+  if(act==='preset'){ setVal(k,m,parseInt(b.getAttribute('data-sec'),10)); }
+  else if(act==='custom'||act==='sync'){
+    var inp=$('inp-'+k+'-'+m); var v=parseInt(inp.value,10);
+    if(isNaN(v)||v<0){ show('请输入 0 或正整数（分钟）',true); return; }
+    var sec=v*60;
+    if(act==='sync'){ setVal(k,'both',sec).then(function(){ inp.value=''; }); }
+    else { setVal(k,m,sec).then(function(){ inp.value=''; }); }
+  }
+  else if(act==='saver'){
+    api('/api/saver',{on:b.getAttribute('data-on')==='1'}).then(function(j){
+      if(j&&j.saver){ S.saver=j.saver; render(S); show('✅ 屏保已'+(j.saver.active?'开启':'关闭')); }
+    });
+  }
+  else if(act==='saverTime'){
+    api('/api/saver',{on:true,timeout:parseInt(b.getAttribute('data-sec'),10)}).then(function(j){
+      if(j&&j.saver){ S.saver=j.saver; render(S); show('✅ 屏保时间已设为 '+j.saver.timeout+' 秒'); }
+    });
+  }
+  else if(act==='dynlock'){
+    api('/api/dynlock',{on:b.getAttribute('data-on')==='1'}).then(function(j){
+      if(j&&j.dynlock){ DL=j.dynlock; refreshDynlock(); show('✅ 动态锁已'+(j.dynlock.enabled?'开启':'关闭')); }
+    });
+  }
+  else if(act==='dynlock-open'){
+    api('/api/dynlock',{open:b.getAttribute('data-target')}).then(function(j){
+      if(j&&j.ok){ show('已打开系统设置，请在其中操作'); } else { show('打开失败，请手动到 设置→账户→登录选项', true); }
+    });
+  }
+});
+$('btn-refresh').onclick=function(){ refresh().then(function(){show('已重新读取')}); refreshDynlock(); };
+$('btn-export').onclick=function(){
+  fetch('/api/export').then(function(r){return r.json()}).then(function(cfg){
+    var blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download='锁屏设置.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },800);
+    show('✅ 配置已导出为「锁屏设置.json」');
+  });
+};
+$('btn-import').onclick=function(){ $('file-import').click(); };
+$('file-import').onchange=function(e){
+  var f=e.target.files&&e.target.files[0]; if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var cfg;
+    try{ cfg=JSON.parse(rd.result); }catch(err){ show('这个文件不是有效的 JSON',true); return; }
+    if(!cfg||!cfg.items){ show('这不像是本工具导出的配置文件（缺少 items）',true); return; }
+    api('/api/import',{config:cfg}).then(function(j){
+      if(j&&j.state){ render(j.state); show('✅ 配置已导入并应用'); }
+    });
+  };
+  rd.readAsText(f,'utf-8'); e.target.value='';
+};
+$('btn-never').onclick=function(){
+  var ks=['lock','display','sleep','hibernate'],i=0;
+  (function next(){
+    if(i>=ks.length){ api('/api/saver',{on:false}).then(function(j){ if(j&&j.saver) S.saver=j.saver; refresh().then(function(){show('✅ 已全部设为「永不」')}); }); return; }
+    var k=ks[i++]; api('/api/set',{key:k,sec:0,mode:'both'}).then(next);
+  })();
+};
+$('btn-defaults').onclick=function(){
+  if(!confirm('将把电源计划恢复为系统默认值（当前所有自定义时间都会丢失），继续？')) return;
+  api('/api/defaults').then(function(j){ if(j&&j.state) render(j.state); show('✅ 已恢复系统默认'); });
+};
+$('btn-quit').onclick=function(){
+  if(!confirm('退出后台程序？退出后本页将失效，重新双击 exe 即可再次启动。')) return;
+  fetch('/api/quit',{method:'POST'}).then(function(){ document.body.innerHTML='<div class="loading">程序已退出，可以关闭此页。<br><br>重新双击「'+S.exe+'」即可再次启动。</div>'; });
+};
+$('btn-theme').onclick=function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  if(!cur) cur=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  var next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{ localStorage.setItem('lockdelay-theme',next); }catch(e){}
+};
+(function(){ try{ var t=localStorage.getItem('lockdelay-theme'); if(t) document.documentElement.setAttribute('data-theme',t); }catch(e){} })();
+function loadBrowsers(){
+  return fetch('/api/browser').then(function(r){return r.json()}).then(function(info){
+    var sel=$('sel-browser'); if(!sel) return;
+    sel.innerHTML='';
+    info.list.forEach(function(b){
+      if(!b.installed) return;
+      var o=document.createElement('option');
+      o.value=b.value; o.setAttribute('data-path', b.path||'');
+      o.textContent=b.name;
+      sel.appendChild(o);
+    });
+    var cur=info.current, res=info.resolved, found=false;
+    for(var i=0;i<sel.options.length;i++){
+      var o=sel.options[i];
+      if(o.value===cur || (res && o.getAttribute('data-path')===res)){ sel.selectedIndex=i; found=true; break; }
+    }
+    if(!found && cur){
+      var o2=document.createElement('option'); o2.value=cur;
+      o2.textContent='自定义：'+cur;
+      sel.appendChild(o2); sel.selectedIndex=sel.options.length-1;
+    }
+    $('browser-cur').textContent = res ? ('当前：'+res) : '当前：系统默认浏览器';
+  });
+}
+$('btn-save-browser').onclick=function(){
+  api('/api/browser',{value:$('sel-browser').value}).then(function(j){
+    if(j&&j.ok){ loadBrowsers().then(function(){
+      show(j.fallback ? '已保存，但没找到这个浏览器，将退回系统默认' : '✅ 已保存，下次启动生效');
+    }); }
+  });
+};
+loadBrowsers();
+if(window.EventSource){ try{ new EventSource('/api/events'); }catch(e){} }
+refresh().catch(function(e){ $('app').innerHTML='<div class="loading">读取失败：'+e.message+'</div>'; });
+refreshDynlock();
+</script>
+</body>
+</html>

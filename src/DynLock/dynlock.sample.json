@@ -1,0 +1,12 @@
+{
+  "DeviceMac": "AA:BB:CC:11:22:33",
+  "DeviceName": "Android Phone",
+  "LockThresholdDbm": -75,
+  "OutOfRangeTimeoutMs": 5000,
+  "LockDelayMs": 3000,
+  "ScanIntervalMs": 2000,
+  "RssiWindowSize": 5,
+  "RssiSmoothing": 0.7,
+  "ActiveScan": true,
+  "LogPath": null
+}

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>LockscreenGui</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <ApplicationIcon>assets\app.ico</ApplicationIcon>
+  </PropertyGroup>
+
+</Project>

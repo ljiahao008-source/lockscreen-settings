@@ -1,0 +1,34 @@
+{
+  "app": "lockscreen-delay",
+  "type": "lockscreen-delay-config",
+  "version": "3.0.0",
+  "exportedAt": "2026-09-02T05:03:42.0547980\u002B08:00",
+  "computer": "\u6211\u7684\u7535\u8111",
+  "scheme": {
+    "name": "\u5E73\u8861",
+    "guid": "381b4222-f694-41f0-9685-ff5bb260df2e"
+  },
+  "items": {
+    "lock": {
+      "ac": 300,
+      "dc": 300
+    },
+    "display": {
+      "ac": 3600,
+      "dc": 3600
+    },
+    "sleep": {
+      "ac": 0,
+      "dc": 0
+    },
+    "hibernate": {
+      "ac": 0,
+      "dc": 0
+    }
+  },
+  "saver": {
+    "active": false,
+    "timeout": 0,
+    "secure": true
+  }
+}

@@ -1,0 +1,26 @@
+# WorkBuddy 项目记忆（勿上传）
+.workbuddy/
+
+# 构建产物
+**/bin/
+**/obj/
+**/node_modules/
+*.cache
+src/gui/publish/
+
+# 大体积历史备份（87MB 旧版 exe）
+backup/*.pre-desktop
+backup/*.pre-watchdog
+
+# 运行日志与临时文件
+*.log
+data/boot-log.txt
+data/browser.txt
+data/zoom-*.png
+data/ui-v31-shot.png
+data/ui-v31-shot2.png
+data/ui-v31-shot3.png
+
+# legacy 构建产物与调试残留
+legacy/sea-prep.blob
+legacy/_btsvc_try.txt
